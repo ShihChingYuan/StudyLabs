@@ -1,3 +1,4 @@
 # 學習實驗室
 
-1. GitStudyForYourself
+##Lab01. GitStudyForYourself
+##Lab02. Python
