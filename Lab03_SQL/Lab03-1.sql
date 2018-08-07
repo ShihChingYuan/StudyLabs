@@ -1,0 +1,2 @@
+select getdate();
+select @@version;
