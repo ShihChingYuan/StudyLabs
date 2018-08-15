@@ -3,7 +3,18 @@
 
 1. Python Basics
 2. List - A data structure
-3. Functions and packages
+3. Functions and packages  
+    ```
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    python get-pip.py --user
+    pip3 install --upgrade pip
+    pip3 install numpy
+    pip3 install pandas
+    pip3 install maplotlib
+    
+    ref : shttp://pip.readthedocs.io/en/stable/installing/
+    ```
 4. Numpy
 5. Plooting with Matplotlib
 6. Control flow and Pandas
