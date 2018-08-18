@@ -1,4 +1,6 @@
-# DAT208x: Introduction to Python for Data Science
+# MPP_Track_DataScience
+
+## DAT208x: Introduction to Python for Data Science
 [edX - Course](https://courses.edx.org/courses/course-v1:Microsoft+DAT208x+2T2018/course/)
 
 1. Python Basics
@@ -13,15 +15,19 @@
     pip3 install pandas
     pip3 install maplotlib
     
-    ref : shttp://pip.readthedocs.io/en/stable/installing/
+    ref : http://pip.readthedocs.io/en/stable/installing/
     ```
 4. Numpy
+    ```
+    ref :
+    http://www.numpy.org/
+    ```
 5. Plooting with Matplotlib
 6. Control flow and Pandas
 
 
 
-# DAT207x: Analyzing and Visualizing Data with Power BI
+## DAT207x: Analyzing and Visualizing Data with Power BI
 [edX - Course](https://courses.edx.org/courses/course-v1:Microsoft+DAT207x+2T2018/course/)
 
 * [Syllabus](https://prod-edxapp.edx-cdn.org/assets/courseware/v1/547b1a8915e1bf0d9a94bbab517a7eed/asset-v1:Microsoft+DAT207x+2T2018+type@asset+block/DAT207x_Syllabus.pdf)
