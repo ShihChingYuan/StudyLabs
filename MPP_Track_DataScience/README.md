@@ -23,6 +23,10 @@
     http://www.numpy.org/
     ```
 5. Plooting with Matplotlib
+    ```
+    ref :
+    https://matplotlib.org/index.html
+    ```
 6. Control flow and Pandas
 
 
