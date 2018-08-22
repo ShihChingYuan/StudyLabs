@@ -16,7 +16,7 @@ MPP_Track_DataScience
   - [ ] Querying Data with Transact-SQL
 - Explore Data with Code
   - [ ] Introduction to R for Data Science
-  - [ ] Introduction to Python for Data Science
+  - [ ] **DAT208x** : Introduction to Python for Data Science
 - Apply Math and Statistics to Data Analysis
   - [ ] Essential Math for Machine Learning: R Edition
   - [ ] Essential Math for Machine Learning: Python Edition
@@ -62,26 +62,27 @@ Syllabus :
     - [pandas](http://pandas.pydata.org/)
 7. Final Labs
    ### Section 1 : Importing and Summarizing Data
+   [SampleData - recent_grads.csv](https://assets.datacamp.com/production/course_6030/datasets/recent_grads.csv)
    - Read and explore your data
-   ```python
+    ```python
     # Import pandas
     import pandas as pd
     # Use pandas to read in recent_grads_url
     recent_grads = pd.read_csv(recent_grads_url)
     # Print the shape
     print(recent_grads.shape)
-   ```
+    ```
    - Exploring Your Data
-   ```python
+    ```python
     # Print .dtypes
     print(recent_grads.dtypes)
     # Output summary statistics
     print(recent_grads.describe())
     # Exclude data of type object
     print(recent_grads.describe(exclude=['object']))
-   ```
+    ```
    - Replacing Missing Values
-   ```python
+    ```python
     # Names of the columns we're searching for missing values
     columns = ['median', 'p25th', 'p75th']
     # Take a look at the dtypes
@@ -93,69 +94,100 @@ Syllabus :
     # Replace missing values with NaN
     for column in columns:
         recent_grads.loc[recent_grads[column] == 'UN', column] = np.nan
-   ```
+    ```
    - Select a Column
-   ```python
+    ```python
     # Select sharewomen column
     sw_col = recent_grads.loc[:,'sharewomen']
     # Output first five rows
     print(sw_col.head(5))
-   ```
+    ```
    - Column Maximum Value
-   ```python
+    ```python
     # Import numpy
     import numpy as np
     # Use max to output maximum values
     max_sw = sw_col.max()
     # Print column max
     print(max_sw)
-   ```
+    ```
    - Selecting a Row
-   ```python
+    ```python
     # Output the row containing the maximum percentage of women
     print(recent_grads.loc[recent_grads['sharewomen'] == max_sw])
-   ```
+    ```
    - Converting a DataFrame to Numpy Array
-   ```python
+    ```python
     # Convert to numpy array
     recent_grads_np = recent_grads.as_matrix(columns=['unemployed', 'low_wage_jobs'])
     # Print the type of recent_grads_np
     print(type(recent_grads_np))
-   ```
+    ```
    - Correlation Coefficient
-   ```python
+    ```python
     # Calculate correlation matrix
     print(np.corrcoef(recent_grads_np[:,0], recent_grads_np[:,1]))
-   ```
+    ```
 
    ### Section 2 : Manipulating Data
    - Creating Columns I
-   ```python
-   ```
+    ```python
+    # Add sharemen column
+    recent_grads['sharemen'] = recent_grads['men']/recent_grads['total']
+    ```
    - Select Row with Highest Value
-   ```python
-   ```
+    ```python
+    # Find the maximum percentage value of men
+    max_men = recent_grads['sharemen'].max()
+    # Output the row with the highest percentage of men
+    print(recent_grads[recent_grads['sharemen'] == max_men])
+    ```
    - Creating columns II
-   ```python
-   ```
+    ```python
+    # Add gender_diff column
+    recent_grads['gender_diff'] = (recent_grads['sharewomen'] - recent_grads['sharemen'])
+    ```
    - Updating columns
-   ```python
-   ```
+    ```python
+    # Make all gender difference values positive
+    recent_grads['gender_diff'] = (recent_grads['sharewomen']-recent_grads['sharemen']).abs()
+    # Find the 5 rows with lowest gender rate difference
+    print(recent_grads.nsmallest(5, 'gender_diff'))
+    print(recent_grads.sort_values(by=['gender_diff']).head(5))
+    ```
    - Filtering rows
-   ```python
-   ```
+    ```python
+    # Rows where gender rate difference is greater than .30 
+    diff_30 = recent_grads['gender_diff'] > .30
+    # Rows with more men
+    more_men = recent_grads['men'] > recent_grads['women']
+    # Combine more_men and diff_30
+    more_men_and_diff_30 = np.logical_and(diff_30, more_men)
+    # Find rows with more men and and gender rate difference greater than .30
+    fewer_women = recent_grads[more_men_and_diff_30]
+    ```
    - Grouping with Counts
-   ```python
-   ```
+    ```python
+    # Group by major category and count
+    recent_grads.groupby('major_category')['sharewomen'].mean()
+    print(recent_grads.groupby('major_category')['major_category'].count())
+    ```
    - Grouping with Counts, Part 2
-   ```python
-   ```
+    ```python
+    # Group departments that have less women by category and count
+    print(fewer_women.groupby('major_category')['major_category'].count())
+    ```
    - Grouping One Column with Means
-   ```python
-   ```
+    ```python
+    # Report average gender difference by major category
+    print(recent_grads.groupby('major_category')['gender_diff'].mean())
+    ```
    - Grouping Two Columns with Means
-   ```python
-   ```
+    ```python
+    # Find average number of low wage jobs and unemployment rate of each major category
+    dept_stats = recent_grads.groupby(['major_category'])['low_wage_jobs', 'unemployment_rate'].mean()
+    print(dept_stats)
+    ```
 
    ### Section 3 : Visualizing Data
    - Plotting Scatterplots
