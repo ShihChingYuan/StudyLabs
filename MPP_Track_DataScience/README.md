@@ -1,14 +1,46 @@
 MPP_Track_DataScience
 # Microsoft Professional Program - DataScience
-[Data Science track](https://academy.microsoft.com/en-us/tracks/data-science)
-- DAT208x: Introduction to Python for Data Science
-- DAT207x: Analyzing and Visualizing Data with Power BI
+
+### [Data Science track](https://academy.microsoft.com/en-us/tracks/data-science)
+
+- Get Started with Data Science
+  - [ ] Introduction to Data Science
+- Analyze and Visualize Data
+  - [ ] Analyzing and Visualizing Data with Power BI
+  - [ ] Analyzing and Visualizing Data with Excel
+- Communicate Data Insights
+  - [ ] Analytics Storytelling for Impact
+- Apply Ethics and Law in Analytics
+  - [ ] Ethics and Law in Data and Analytics
+- Query Relational Data
+  - [ ] Querying Data with Transact-SQL
+- Explore Data with Code
+  - [ ] Introduction to R for Data Science
+  - [ ] Introduction to Python for Data Science
+- Apply Math and Statistics to Data Analysis
+  - [ ] Essential Math for Machine Learning: R Edition
+  - [ ] Essential Math for Machine Learning: Python Edition
+  - [ ] Essential Statistics for Data Analysis using Excel
+- Plan and Conduct Data Studies
+  - [ ] Data Science Research Methods: R Edition
+  - [ ] Data Science Research Methods: Python Edition
+- Build Machine Learning Models
+  - [ ] Principles of Machine Learning: R Edition
+  - [ ] Principles of Machine Learning: Python Edition
+- Build Predictive Solutions at Scale
+  - [ ] Developing Big Data Solutions with Azure Machine Learning
+  - [ ] Analyzing Big Data with Microsoft R
+  - [ ] Implementing Predictive Analytics with Spark in Azure HDInsight
+- Final Project
+  - [ ] Microsoft Professional Capstone : Data Science
+- Microsoft Professional Program Certificate in Data Science
+
 
 ***
 ## DAT208x: Introduction to Python for Data Science
 [edX - Course](https://courses.edx.org/courses/course-v1:Microsoft+DAT208x+2T2018/course/)
 
-Syllabus : 
+Syllabus :
 1. Python Basics
 2. List - A data structure
 3. Functions and packages
@@ -22,11 +54,11 @@ Syllabus :
     pip3 install pandas
     pip3 install maplotlib
     ```
-4. Numpy  
+4. Numpy
     - [numpy](http://www.numpy.org/)
-5. Plooting with Matplotlib  
+5. Plooting with Matplotlib
     - [matplotlib](https://matplotlib.org/index.html)
-6. Control flow and Pandas  
+6. Control flow and Pandas
     - [pandas](http://pandas.pydata.org/)
 7. Final Labs
    ### Section 1 : Importing and Summarizing Data
@@ -50,7 +82,7 @@ Syllabus :
    ```
    - Replacing Missing Values
    ```python
-    # Names of the columns we're searching for missing values 
+    # Names of the columns we're searching for missing values
     columns = ['median', 'p25th', 'p75th']
     # Take a look at the dtypes
     print(recent_grads[columns].dtypes)
@@ -149,10 +181,11 @@ Syllabus :
    ```
    - Plotting Quantiles of Salary, Part 1
    ```python
-   ```   
+   ```
    - Plotting Quantiles of Salary, Part 2
    ```python
    ```
+
 ***
 ## DAT207x: Analyzing and Visualizing Data with Power BI
 [edX - Course](https://courses.edx.org/courses/course-v1:Microsoft+DAT207x+2T2018/course/)
