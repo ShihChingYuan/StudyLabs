@@ -39,6 +39,7 @@ MPP_Track_DataScience
 ***
 ## DAT208x: Introduction to Python for Data Science
 [edX - Course](https://courses.edx.org/courses/course-v1:Microsoft+DAT208x+2T2018/course/)
+[DataCamp] d49effb022dea74a19949adf8dcac83a@edx.lti.datacamp.com
 
 Syllabus :
 1. Python Basics
@@ -157,7 +158,7 @@ Syllabus :
     ```
    - Filtering rows
     ```python
-    # Rows where gender rate difference is greater than .30 
+    # Rows where gender rate difference is greater than .30
     diff_30 = recent_grads['gender_diff'] > .30
     # Rows with more men
     more_men = recent_grads['men'] > recent_grads['women']
@@ -192,30 +193,96 @@ Syllabus :
    ### Section 3 : Visualizing Data
    - Plotting Scatterplots
    ```python
+   # Import matplotlib
+   import matplotlib.pyplot as plt
+   # Create scatter plot
+   plt.scatter(unemployment_rate, low_wage_jobs)
+   # Label x axis
+   plt.xlabel('Unemployment rate')
+   # Label y axis
+   plt.ylabel('Low pay jobs')
+   # Display the graph
+   plt.show()
    ```
    - Modifying Plot Colors
    ```python
+   # Plot the red and triangle shaped scatter plot
+   plt.scatter(unemployment_rate, low_wage_jobs, color='r', marker = '^')
+   # Display the visualization
+   plt.show()
    ```
    - Plotting Histograms
    ```python
+   # Plot a histogram of sharewomen
+   plt.hist(sharewomen)
+   # Show the plot
+   plt.show()
    ```
    - Plotting with pandas
    ```python
+   # Import matplotlib and pandas
+   import matplotlib.pyplot as plt
+   import pandas as pd
+   # Create scatter plot
+   dept_stats.plot(kind='scatter', x='unemployment_rate', y='low_wage_jobs')
+   plt.show()
+
+   # Create histogram
+   recent_grads.sharewomen.plot(kind='hist')
+   plt.show()
    ```
    - Plotting One Bar Graphs
    ```python
+   # DataFrame of non-college job sums
+   df = recent_grads.groupby(['major_category']).non_college_jobs.sum()
+   # Plot bar chart
+   df.plot(kind='bar')
+   plt.show()
+   # Show graph
    ```
    - Plotting Two Bar Graphs
    ```python
+   # DataFrame of college and non-college job sums
+   df1 = recent_grads.groupby(['major_category'])['college_jobs', 'non_college_jobs'].sum()
+   # Plot bar chart
+   df1.plot(kind='bar')   
+   # Show graph
+   plt.show()
    ```
    - Dropping Missing Values
    ```python
+   # Print the size of the DataFrame
+   print(recent_grads.size)
+   # Drop all rows with a missing value
+   recent_grads = recent_grads.dropna()
+   # Print the size of the DataFrame
+   print(recent_grads.size)
    ```
    - Plotting Quantiles of Salary, Part 1
    ```python
+   # Convert to numeric and divide by 1000
+   recent_grads['median'] = pd.to_numeric(recent_grads['median'])/1000
+   recent_grads['p25th'] = pd.to_numeric(recent_grads['p25th'])/1000
+   recent_grads['p75th'] = pd.to_numeric(recent_grads['p75th'])/1000
+   # Select averages by major category
+   columns = ['median', 'p25th', 'p75th']
+   sal_quantiles = recent_grads.groupby(['major_category'])[columns].mean()
+   print(sal_quantiles)
    ```
    - Plotting Quantiles of Salary, Part 2
    ```python
+   # Plot the data
+   sal_quantiles.plot()
+   # Set xticks
+   plt.xticks(
+       np.arange(len(sal_quantiles.index)),
+       sal_quantiles.index, 
+       rotation='vertical')
+   # Show the plot
+   plt.show()
+   # Plot with subplots
+   sal_quantiles.plot(subplots=True)
+   plt.show()
    ```
 
 ***
