@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 EXEC sp_configure 'external scripts enabled'
 GO
@@ -10,24 +10,13 @@ c:\>python -m  pip install urllib3
 c:\>python -m  pip install --upgrade pandas
 
 */
-
-IF OBJECT_ID('tempdb..#tbEvents') IS NOT NULL
-DROP TABLE #tbEvents;
-GO
-CREATE TABLE #tbEvents
-(
-	[name] nvarchar(max)
-	, [note] nvarchar(max)
-	, [type] nvarchar(max)
-);
+USE [tempdb]
 GO
 
---Index(['data', 'msg', 'status'], dtype='object')
-	--'data' --> Index(['name', 'note', 'type'], dtype='object')
-
-DROP PROCEDURE IF EXISTS [dbo].[usp_PyGetWS]
+PRINT N'1. 資料表';
+DROP PROCEDURE IF EXISTS [dbo].[usp_PyGet_Table]
 GO
-CREATE PROCEDURE [dbo].[usp_PyGetWS]
+CREATE PROCEDURE [dbo].[usp_PyGet_Table]
 AS
 BEGIN
 EXEC sp_execute_external_script
@@ -36,29 +25,138 @@ EXEC sp_execute_external_script
 import pandas as pd
 from pandas.io.json import json_normalize
 df = pd.read_json("https://anbon.works/ntue_activity/api/table")
-JSONStruct_Event = json_normalize(json_normalize(df["data"][0])["structure"][0])
-JSONStruct_Apply = json_normalize(json_normalize(df["data"][1])["structure"][0])
-x = JSONStruct_Event.append(JSONStruct_Apply)
-# print(JSONStruct_Event.columns)
-print(JSONStruct_Event)
-# print(JSONStruct_Apply.columns)
-print(JSONStruct_Apply)
+df_event = json_normalize(json_normalize(df["data"][0])["structure"][0])
+df_event["idx"] = "event"
+df_apply = json_normalize(json_normalize(df["data"][1])["structure"][0])
+df_apply["idx"] = "apply"
+df = df_event.append(df_apply)
+print(df)
 '
-	, @output_data_1_name =N'x'
+	, @output_data_1_name =N'df'
 	with result sets(
 		(
-			[name] nvarchar(max)
-			, [note] nvarchar(max)
-			, [type] nvarchar(max)
+			[name]		NVARCHAR(32)
+			, [note]	NVARCHAR(100)
+			, [type]	VARCHAR(32)
+			, [idx]		NVARCHAR(32)
 		)
 	)
 END
 GO
+
+PRINT N'2. 活動列表';
+DROP PROCEDURE IF EXISTS [dbo].[usp_PyGet_EventList]
+GO
+CREATE PROCEDURE [dbo].[usp_PyGet_EventList]
+AS
+BEGIN
+EXEC sp_execute_external_script
+	@language = N'Python'
+	, @script = N'
+import pandas as pd
+from pandas.io.json import json_normalize
+df_eventlist = pd.read_json("https://anbon.works/ntue_activity/api/event_list")
+JSON_EventList = json_normalize(df_eventlist["data"])
+'
+	, @output_data_1_name =N'JSON_EventList'
+	with result sets(
+		(
+			[classify]		NVARCHAR(100)
+			, [deadline]	DATETIME
+			, [end_date]	DATE
+			, [end_time]	TIME
+			, [id]			INT
+			, [link]		NVARCHAR(1000)
+			, [location]	NVARCHAR(500)
+			, [organizer]	NVARCHAR(100)
+			, [speaker]		NVARCHAR(100)
+			, [start_date]	DATE
+			, [start_time]	TIME
+			, [status]		VARCHAR(100)
+			, [subject]		NVARCHAR(100)
+			, [type]		INT
+		)
+	)
+END
+GO
+
+PRINT N'3. 報名資料';
+DROP PROCEDURE IF EXISTS [dbo].[usp_PyGet_ApplyList]
+GO
+CREATE PROCEDURE [dbo].[usp_PyGet_ApplyList]
+AS
+BEGIN
+EXEC sp_execute_external_script
+	@language = N'Python'
+	, @script = N'
+import pandas as pd
+from pandas.io.json import json_normalize
+df = pd.read_json("https://anbon.works/ntue_activity/api/apply_list")
+df_apply = json_normalize(df["data"])
+print(df)
+print(df_apply)
+'
+	--, @output_data_1_name =N'df_apply'
+	--with result sets(
+	--	(
+	--		[id]			NVARCHAR(MAX)
+	--		, [date]		NVARCHAR(MAX)
+	--		, [start_time]	NVARCHAR(MAX)
+	--		, [subject]		NVARCHAR(MAX)
+	--		, [sn]			NVARCHAR(MAX)
+	--		, [username]	NVARCHAR(MAX)
+	--		, [classify]	NVARCHAR(MAX)
+	--		, [type]		NVARCHAR(MAX)
+	--		, [location]	NVARCHAR(MAX)
+	--	)
+	--)
+END
+GO
+
+PRINT N'4. 活動類型列表';
+DROP PROCEDURE IF EXISTS [dbo].[usp_PyGet_ClassifyList]
+GO
+CREATE PROCEDURE [dbo].[usp_PyGet_ClassifyList]
+AS
+BEGIN
+EXEC sp_execute_external_script
+	@language = N'Python'
+	, @script = N'
+import pandas as pd
+df_classifylist = pd.read_json("https://anbon.works/ntue_activity/api/classify_list")
+df_classifylist_event = pd.DataFrame(df_classifylist["data"]["活動"], columns=["data"])
+df_classifylist_event["classify"] = "活動"
+df_classifylist_speech = pd.DataFrame(df_classifylist["data"]["演講"], columns=["data"])
+df_classifylist_speech["classify"] = "演講"
+df = df_classifylist_event.append(df_classifylist_speech)
+print(df)
+'
+	, @output_data_1_name =N'df'
+	with result sets(
+		(
+			[data]			NVARCHAR(100)
+			, [classify]	NVARCHAR(32)
+		)
+	)
+END
+GO
+
 /*
 
-	INSERT INTO #tbEvents
-	EXEC [dbo].[usp_PyGetWS];
+--1. 資料表
+--	https://anbon.works/ntue_activity/api/table
+EXEC [dbo].[usp_PyGet_Table];
 
-	SELECT * FROM #tbEvents;
+--2. 活動列表
+--	https://anbon.works/ntue_activity/api/event_list
+EXEC [dbo].[usp_PyGet_EventList];
+
+--3. 報名資料
+--	https://anbon.works/ntue_activity/api/apply_list
+EXEC [dbo].[usp_PyGet_ApplyList];
+
+--4. 活動類型列表
+--	https://anbon.works/ntue_activity/api/classify_list
+EXEC [dbo].[usp_PyGet_ClassifyList];
 
 */
