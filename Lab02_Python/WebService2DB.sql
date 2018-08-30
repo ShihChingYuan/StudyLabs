@@ -24,7 +24,7 @@ EXEC sp_execute_external_script
 	, @script = N'
 import pandas as pd
 from pandas.io.json import json_normalize
-df = pd.read_json("https://anbon.works/ntue_activity/api/table")
+df = pd.read_json("http://ihuodong.ntue.edu.tw//api/table")
 df_event = json_normalize(json_normalize(df["data"][0])["structure"][0])
 df_event["idx"] = "event"
 df_apply = json_normalize(json_normalize(df["data"][1])["structure"][0])
@@ -55,13 +55,13 @@ EXEC sp_execute_external_script
 	, @script = N'
 import pandas as pd
 from pandas.io.json import json_normalize
-df_eventlist = pd.read_json("https://anbon.works/ntue_activity/api/event_list")
+df_eventlist = pd.read_json("http://ihuodong.ntue.edu.tw//api/event_list")
 JSON_EventList = json_normalize(df_eventlist["data"])
 '
 	, @output_data_1_name =N'JSON_EventList'
 	with result sets(
 		(
-			[classify]		NVARCHAR(100)
+			[classify]		NVARCHAR(32)
 			, [deadline]	DATETIME
 			, [end_date]	DATE
 			, [end_time]	TIME
@@ -91,25 +91,26 @@ EXEC sp_execute_external_script
 	, @script = N'
 import pandas as pd
 from pandas.io.json import json_normalize
-df = pd.read_json("https://anbon.works/ntue_activity/api/apply_list")
+df = pd.read_json("http://ihuodong.ntue.edu.tw//api/apply_list")
 df_apply = json_normalize(df["data"])
 print(df)
 print(df_apply)
+print(df_apply.columns)
 '
-	--, @output_data_1_name =N'df_apply'
-	--with result sets(
-	--	(
-	--		[id]			NVARCHAR(MAX)
-	--		, [date]		NVARCHAR(MAX)
-	--		, [start_time]	NVARCHAR(MAX)
-	--		, [subject]		NVARCHAR(MAX)
-	--		, [sn]			NVARCHAR(MAX)
-	--		, [username]	NVARCHAR(MAX)
-	--		, [classify]	NVARCHAR(MAX)
-	--		, [type]		NVARCHAR(MAX)
-	--		, [location]	NVARCHAR(MAX)
-	--	)
-	--)
+	, @output_data_1_name =N'df_apply'
+	with result sets(
+		(
+			[classify]		NVARCHAR(32)
+			, [date]		DATE
+			, [id]			INT
+			, [location]	NVARCHAR(500)
+			, [sn]			NVARCHAR(100)
+			, [start_time]	TIME
+			, [subject]		NVARCHAR(100)
+			, [type]		INT
+			, [username]	NVARCHAR(100)
+		)
+	)
 END
 GO
 
@@ -123,7 +124,7 @@ EXEC sp_execute_external_script
 	@language = N'Python'
 	, @script = N'
 import pandas as pd
-df_classifylist = pd.read_json("https://anbon.works/ntue_activity/api/classify_list")
+df_classifylist = pd.read_json("http://ihuodong.ntue.edu.tw//api/classify_list")
 df_classifylist_event = pd.DataFrame(df_classifylist["data"]["活動"], columns=["data"])
 df_classifylist_event["classify"] = "活動"
 df_classifylist_speech = pd.DataFrame(df_classifylist["data"]["演講"], columns=["data"])
@@ -144,19 +145,19 @@ GO
 /*
 
 --1. 資料表
---	https://anbon.works/ntue_activity/api/table
+--	http://ihuodong.ntue.edu.tw/api/table
 EXEC [dbo].[usp_PyGet_Table];
 
 --2. 活動列表
---	https://anbon.works/ntue_activity/api/event_list
+--	http://ihuodong.ntue.edu.tw//api/event_list
 EXEC [dbo].[usp_PyGet_EventList];
 
 --3. 報名資料
---	https://anbon.works/ntue_activity/api/apply_list
+--	http://ihuodong.ntue.edu.tw//api/apply_list
 EXEC [dbo].[usp_PyGet_ApplyList];
 
 --4. 活動類型列表
---	https://anbon.works/ntue_activity/api/classify_list
+--	http://ihuodong.ntue.edu.tw//api/classify_list
 EXEC [dbo].[usp_PyGet_ClassifyList];
 
 */
