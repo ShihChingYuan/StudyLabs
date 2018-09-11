@@ -57,21 +57,25 @@ import pandas as pd
 from pandas.io.json import json_normalize
 df_eventlist = pd.read_json("http://ihuodong.ntue.edu.tw//api/event_list")
 JSON_EventList = json_normalize(df_eventlist["data"])
+print(JSON_EventList.columns)
 '
 	, @output_data_1_name =N'JSON_EventList'
 	with result sets(
 		(
 			[classify]		NVARCHAR(32)
+			, [contact]		NVARCHAR(100)
 			, [deadline]	DATETIME
 			, [end_date]	DATE
-			, [end_time]	TIME
+			, [end_time]	TIME(0)
 			, [id]			INT
 			, [link]		NVARCHAR(1000)
 			, [location]	NVARCHAR(500)
+			, [max_apply]	TINYINT
 			, [organizer]	NVARCHAR(100)
+			, [phone]		NVARCHAR(100)
 			, [speaker]		NVARCHAR(100)
 			, [start_date]	DATE
-			, [start_time]	TIME
+			, [start_time]	TIME(0)
 			, [status]		VARCHAR(100)
 			, [subject]		NVARCHAR(100)
 			, [type]		INT
@@ -103,9 +107,10 @@ print(df_apply.columns)
 			[classify]		NVARCHAR(32)
 			, [date]		DATE
 			, [id]			INT
+			, [event_id]    INT
 			, [location]	NVARCHAR(500)
 			, [sn]			NVARCHAR(100)
-			, [start_time]	TIME
+			, [start_time]	TIME(0)
 			, [subject]		NVARCHAR(100)
 			, [type]		INT
 			, [username]	NVARCHAR(100)
@@ -125,18 +130,21 @@ EXEC sp_execute_external_script
 	, @script = N'
 import pandas as pd
 df_classifylist = pd.read_json("http://ihuodong.ntue.edu.tw//api/classify_list")
-df_classifylist_event = pd.DataFrame(df_classifylist["data"]["活動"], columns=["data"])
+df_classifylist_event = pd.DataFrame(pd.Series(df_classifylist["data"]["活動"]), columns=["typename"])
 df_classifylist_event["classify"] = "活動"
-df_classifylist_speech = pd.DataFrame(df_classifylist["data"]["演講"], columns=["data"])
+df_classifylist_event["type"] = df_classifylist_event.index
+df_classifylist_speech = pd.DataFrame(pd.Series(df_classifylist["data"]["演講"]), columns=["typename"])
 df_classifylist_speech["classify"] = "演講"
+df_classifylist_speech["type"] = df_classifylist_speech.index
 df = df_classifylist_event.append(df_classifylist_speech)
 print(df)
 '
 	, @output_data_1_name =N'df'
 	with result sets(
 		(
-			[data]			NVARCHAR(100)
+			[typename]		NVARCHAR(100)
 			, [classify]	NVARCHAR(32)
+			, [type]		TINYINT
 		)
 	)
 END
