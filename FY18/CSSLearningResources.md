@@ -1,7 +1,28 @@
 # FY18
 
+## High Availability
+[High Availability Solutions (SQL Server)](https://docs.microsoft.com/en-us/sql/sql-server/failover-clusters/high-availability-solutions-sql-server)
+
+作為 HA 手段的解決方案有下列數種：
+* [Always On Failover Cluster Instances](https://docs.microsoft.com/zh-tw/sql/sql-server/failover-clusters/windows/always-on-failover-cluster-instances-sql-server)
+    - 若背後有 Shared Storage，建議採本方案
+    - 保護層級：SQL Instance
+    - FCI in WSFC
+      - 網路名稱, IP 位址  
+      - SQL Server Database Engine, Agent, Analysis Services
+      - File Stream
+* [Always On Availability Groups](https://docs.microsoft.com/zh-tw/sql/database-engine/availability-groups/windows/always-on-availability-groups-sql-server)
+    - 若僅想藉由 SQL Server 層級作為保護手段，建議採本方案
+    - 保護層級：SQL Database
+* Database mirroring
+* Log shipping
+    - 不支援 Always On 版本的 SQL Server 版本，則建議採本方案
+    - [SQL Server 2016 的版本及支援功能](https://docs.microsoft.com/zh-tw/sql/sql-server/editions-and-components-of-sql-server-2016?view=sql-server-2017)
+
+
 ## Cluster
-* [High Availability Solutions (SQL Server)](https://docs.microsoft.com/en-us/sql/sql-server/failover-clusters/high-availability-solutions-sql-server)
+
+
 
 * [建立新的 SQL Server 容錯移轉叢集 (安裝程式)](https://docs.microsoft.com/zh-tw/sql/sql-server/failover-clusters/install/create-a-new-sql-server-failover-cluster-setup?view=sql-server-2017)
 
